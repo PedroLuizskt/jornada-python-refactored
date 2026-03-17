@@ -96,5 +96,64 @@ python gabarito_re.py
 
 ---
 
+## 📊 Desafio de Projeto 02: Inteligência de Retenção e Churn Analytics
 
+O segundo desafio aprofunda-se na Ciência de Dados aplicada aos negócios, focando na identificação e mitigação de **Churn** (evasão de clientes) em um modelo de assinaturas (SaaS). O projeto original propunha uma análise exploratória linear, baseada em saídas de terminal e visualizações genéricas.
+
+**O Desafio de Engenharia:** Elevar o script procedural para um motor analítico orientado a objetos, aplicar princípios rigorosos de *Data Storytelling* (design corporativo e cores semânticas) e encapsular a lógica de filtros em um modelo preditivo de cenários (*What-If Analysis*).
+
+### ⚙️ A Engenharia por Trás do Código
+
+A refatoração transformou um simples arquivo de exploração em uma ferramenta de *Business Intelligence* robusta e modular.
+
+#### 1. Motor Analítico Encapsulado (OOP) e Prevenção de Estado
+Em ambientes REPL como o Jupyter Notebook, variáveis soltas podem causar vazamento de escopo (*scope leak*) e dados fantasmas. Para resolver isso, toda a pipeline de ETL (Extração, Transformação e Carga) e plotagem foi encapsulada na classe `ChurnIntelligence`. Isso garante que a ingestão, a limpeza de dados (*Listwise Deletion*) e a análise rodem em um estado limpo e determinístico.
+
+#### 2. Data Storytelling e Customização de UI (`plotly.io`)
+Gráficos com cores aleatórias não geram decisões eficientes. Implementei uma camada de *Styling* corporativo modificando os *templates* globais do Plotly. 
+Foi criada a constante `CHURN_PALETTE`, garantindo que a evasão seja sempre sinalizada em Vermelho (Alerta) e a retenção em Azul Escuro. Além disso, o design removeu grades desnecessárias (Tufte's Data-Ink Ratio) para focar estritamente na diferença volumétrica entre as coortes.
+
+#### 3. Projeção Algorítmica de Cenários (What-If Analysis)
+Em vez de apenas constatar o passado, o motor analítico foi programado para simular o futuro. O método `simulate_business_rules()` aplica máscaras booleanas dinâmicas baseadas nos *thresholds* encontrados na análise visual (ex: limite de 4 chamados de suporte e extinção de contratos mensais). O algoritmo recalcula a base e prova matematicamente o ROI da análise: **projetando a redução da taxa de Churn de 56.71% para 18.40%**.
+
+---
+
+### 🛠️ Estrutura do Projeto
+
+```text
+📦 jornada-python-refactored
+ ┣ 📂 Aula02
+ ┃ ┣ 📜 analise_churn_re.ipynb       # Notebook estruturado com Motor OOP e Storytelling
+ ┃ ┣ 📜 cancelamentos_sample.csv     # Base de dados de assinaturas (Input)
+ ┃ ┗ 🖼️ duracao_contrato_evasao_gra.png # Asset visual (Output)
+```
+
+### 🎮 Como Executar a Análise
+
+Este módulo foi projetado para execução em ambientes de Notebook (Jupyter Lab ou VS Code com extensão Jupyter).
+
+1. **Navegue até o diretório e instale as dependências:**
+```bash
+cd Aula02
+pip install pandas plotly nbformat
+```
+
+2. **Execução Interativa:**
+Abra o arquivo `analise_churn_re.ipynb` na sua IDE de preferência. A estrutura modular permite que você execute a célula de configuração da classe (`ChurnIntelligence`) e, em seguida, chame os métodos de plotagem individualmente para explorar interativamente os atributos:
+```python
+analise = ChurnIntelligence("cancelamentos_sample.csv")
+analise.ingest_and_clean()
+analise.plot_feature_impact("dias_atraso")
+```
+<br>
+
+<div align="center">
+  <img src="Aula02/duracao_contrato_evasao_gra.png" width="700px" style="border-radius: 10px; box-shadow: 0px 0px 20px rgba(55, 118, 171, 0.4);"/>
+  <br>
+  <sub><i>Dashboard analítico focado na identificação de Thresholds (Limiares de Ruptura) de Churn.</i></sub>
+</div>
+
+<br>
+
+---
 
