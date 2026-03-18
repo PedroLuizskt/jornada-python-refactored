@@ -157,3 +157,77 @@ analise.plot_feature_impact("dias_atraso")
 
 ---
 
+## 🧠 Desafio de Projeto 03: Arquitetura de Machine Learning para Credit Scoring
+
+O terceiro desafio mergulha no ecossistema de Inteligência Artificial e modelagem preditiva para o mercado financeiro, com o objetivo de classificar o *score* de crédito de clientes (Ruim, Ok, Bom). O projeto original propunha um script linear que sofria de gargalos arquiteturais graves, como o uso incorreto de codificadores ordinais e vazamento de dados (*Data Leakage*).
+
+**O Desafio de Engenharia:** Evoluir um script estatístico amador para um **Pipeline Enterprise** robusto utilizando *Scikit-Learn*, corrigindo distorções matemáticas (*Scaling* e *Encoding*), isolando transformações e garantindo resiliência total para inferência de novos dados em produção.
+
+### ⚙️ A Engenharia por Trás do Código
+
+A refatoração transformou um fluxo vulnerável a quebras em um motor de IA encapsulado, modular e preparado para integração com APIs.
+
+#### 1. Pipelines Modulares e Prevenção de Data Leakage
+No desenvolvimento original, o tratamento de dados ocorria em todo o *dataset* antes da separação entre Treino e Teste, permitindo que o modelo "espiasse" o futuro (*Data Leakage*). A arquitetura refatorada introduz o objeto `Pipeline` do Scikit-Learn. Agora, as transformações estatísticas aprendem suas regras exclusivamente com a base de treino e apenas as aplicam à base de teste, garantindo uma validação matemática real e sem viés.
+
+#### 2. Feature Engineering Dinâmica (`ColumnTransformer`)
+Foi eliminado o anti-padrão de usar `LabelEncoder` para atributos categóricos independentes (que ensinava ao modelo que um "médico" valia mais que um "cientista"). O sistema agora utiliza um roteador dinâmico:
+* **One-Hot Encoding:** Para dados em texto (categorias). Adicionamos o fail-safe `handle_unknown='ignore'`, garantindo que se um cliente novo chegar com uma profissão inédita em produção, o sistema não sofra um *Crash* (*ValueError*).
+* **StandardScaler:** Para variáveis numéricas. Isso corrige a "cegueira" do algoritmo *K-Nearest Neighbors (KNN)*, colocando idades (dezenas) e salários (milhares) na mesma régua de distância euclidiana.
+
+#### 3. Avaliação de Risco Focada em Negócios (Business Metrics)
+O motor original avaliava os modelos apenas por "Acurácia Global". Em cenários de crédito com dados desbalanceados, essa métrica é uma ilusão. A avaliação foi elevada para o uso do `classification_report`, focando na métrica de **Recall** da classe *Poor* (Ruim). O sistema agora foca em responder à pergunta de milhões de reais do banco: *"De todos os clientes que realmente vão dar calote, quantos o nosso modelo conseguiu bloquear?"*
+
+---
+
+### 🛠️ Estrutura do Projeto
+
+```text
+📦 jornada-python-refactored
+ ┣ 📂 Aula03
+ ┃ ┣ 📜 aula3_re.ipynb                # Notebook estruturado com ML Pipelines e ColumnTransformer
+ ┃ ┣ 📜 clientes.csv                  # Base de dados histórica corporativa (Input/Treino)
+ ┃ ┣ 📜 novos_clientes.csv            # Base de dados para simulação de inferência (Produção)
+ ┃ ┣ 🖼️ ColumnTransformer.png         # Diagrama da arquitetura de transformação de features
+ ┃ ┗ 🖼️ relatorio_modelos.png         # Output das métricas corporativas de validação
+```
+
+### 🎮 Como Executar a Simulação Preditiva
+
+Este módulo de Inteligência Artificial foi projetado para execução em ambientes de Notebook (Jupyter Lab ou VS Code).
+
+1. **Navegue até o diretório e instale as dependências analíticas:**
+```bash
+cd Aula03
+pip install pandas scikit-learn
+```
+
+2. **Execução Interativa e Treinamento:**
+Abra o arquivo `aula3_re.ipynb` na sua IDE. O motor de IA utiliza processamento paralelo (`n_jobs=-1`) para utilizar todos os núcleos da sua CPU durante o treinamento da *Random Forest* e do *KNN*.
+
+3. **Validação Visual:**
+Ao executar as células de avaliação, o motor não apenas preverá o *score* dos clientes em `novos_clientes.csv`, mas gerará o relatório completo com a prova matemática do desempenho algorítmico.
+
+<br>
+
+<div align="center">
+  <img src="Aula03/ColumnTransformer.png" width="700px" style="border-radius: 10px; box-shadow: 0px 0px 20px rgba(55, 118, 171, 0.4);"/>
+  <br>
+  <sub><i>Arquitetura do ColumnTransformer: Roteamento dinâmico de tratamento numérico e categórico.</i></sub>
+</div>
+
+<br>
+
+<div align="center">
+  <img src="Aula03/relatorio_modelos.png" width="700px" style="border-radius: 10px; box-shadow: 0px 0px 20px rgba(55, 118, 171, 0.4);"/>
+  <br>
+  <sub><i>Classification Report evidenciando o Recall de 84% para detecção de perfis de alto risco financeiro.</i></sub>
+</div>
+
+<br>
+
+---
+
+
+
+
