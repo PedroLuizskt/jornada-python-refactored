@@ -1,11 +1,12 @@
 <div align="center">
-<sub>Desenvolvido para evolução técnica por <a href="https://github.com/PedroLuizskt">Pedro Luiz</a></sub>
+  <sub>Arquitetura e Engenharia de Software por <a href="https://github.com/PedroLuizskt">Pedro Luiz</a></sub>
 </div>
+
 <div align="center">
-<img width="100%" src="https://capsule-render.vercel.app/api?type=waving&color=3776AB&height=120&section=header"/>
+  <img width="100%" src="https://capsule-render.vercel.app/api?type=waving&color=3776AB&height=120&section=header"/>
   
   <a href="https://github.com/PedroLuizskt">
-    <img src="https://readme-typing-svg.herokuapp.com/?color=3776AB&size=35&center=true&vCenter=true&width=1000&lines=Python+Software+Engineering;Robotic+Process+Automation+(RPA);Data+Engineering+&+Architecture&duration=4000&pause=1000" alt="Typing SVG" />
+    <img src="https://readme-typing-svg.herokuapp.com/?color=3776AB&size=35&center=true&vCenter=true&width=1000&lines=Python+Software+Engineering;Robotic+Process+Automation+(RPA);Data+Engineering+&+Architecture;SecOps+&+Machine+Learning+Pipelines&duration=4000&pause=1000" alt="Typing SVG" />
   </a>
 </div>
 
@@ -13,17 +14,23 @@
 
 [![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)](https://www.python.org/)
 [![Pandas](https://img.shields.io/badge/pandas-%23150458.svg?style=for-the-badge&logo=pandas&logoColor=white)](https://pandas.pydata.org/)
+[![Scikit-Learn](https://img.shields.io/badge/scikit--learn-%23F7931E.svg?style=for-the-badge&logo=scikit-learn&logoColor=white)](https://scikit-learn.org/)
+[![OpenAI](https://img.shields.io/badge/OpenAI-412991.svg?style=for-the-badge&logo=OpenAI&logoColor=white)](https://openai.com/)
 [![Git](https://img.shields.io/badge/GIT-E44C30?style=for-the-badge&logo=git&logoColor=white)](https://git-scm.com/)
 
 </div>
 
 ---
 
-## 🚀 Sobre o Repositório
+## 🚀 Sobre o repositório:
 
-Este repositório é dedicado ao desenvolvimento, versionamento e refatoração arquitetural dos desafios propostos na "Jornada Python". O objetivo central não é apenas apresentar scripts funcionais, mas elevar a base de código a um padrão de produção, simulando cenários reais de Engenharia de Software.
+Este repositório documenta a evolução técnica dos desafios propostos na **"Jornada Python"**. O objetivo central transcende a criação de scripts funcionais; o foco deste portfólio é a **Engenharia de Software e Arquitetura de Dados Aplicada**.
 
-A cada novo módulo, os códigos originais procedurais são reestruturados utilizando paradigmas avançados (Orientação a Objetos, Clean Code, Injeção de Dependências e Tratamento de Erros), garantindo soluções modulares, escaláveis e resilientes.
+A cada novo módulo, os códigos originais (de caráter introdutório e procedural) foram sistematicamente refatorados para padrões de produção (*Production-Ready*). A base de código aqui apresentada demonstra o domínio sobre os seguintes pilares arquiteturais:
+
+* **Escalabilidade & Manutenibilidade:** Transição de scripts lineares para arquiteturas Orientadas a Objetos (POO) e módulos desacoplados.
+* **Governança de Dados:** Implementação de pipelines analíticos limpos, *Feature Engineering* dinâmica (sem *Data Leakage*) e tolerância a falhas (NaN handling).
+* **Segurança (SecOps):** Blindagem de aplicações em nuvem utilizando variáveis de ambiente e proteção de credenciais contra vazamentos.
 
 ---
 
@@ -228,6 +235,90 @@ Ao executar as células de avaliação, o motor não apenas preverá o *score* d
 
 ---
 
+## 🤖 Desafio de Projeto 04: Arquitetura de Assistente Virtual (LLM) e SecOps
+
+O quarto desafio coroa a jornada com a integração de Inteligência Artificial Generativa. O objetivo era construir uma interface de chat capaz de manter contexto e conversar de forma inteligente. No entanto, o projeto original apresentava falhas críticas de segurança corporativa (credenciais expostas no código) e falta de governança sobre o comportamento da IA.
+
+**O Desafio de Engenharia:** Refatorar um protótipo vulnerável para uma **Arquitetura Enterprise de IA**, implementando cofres de credenciais (*Environment Variables*), controle de estado de sessão (*Session State Management*), resiliência de API e injeção de *System Prompts* para governança de respostas.
+
+### ⚙️ A Engenharia por Trás do Código
+
+O motor analítico foi redesenhado para separar estritamente a interface do usuário (Frontend) da lógica de comunicação com os servidores da OpenAI (Backend/API).
+
+#### 1. SecOps e Proteção de Credenciais (`.env`)
+No ecossistema de Nuvem, *hardcodar* chaves de API no código-fonte é o caminho mais rápido para o vazamento de dados e prejuízos financeiros severos. A arquitetura foi refatorada para utilizar a biblioteca `dotenv`. A chave da OpenAI agora reside exclusivamente em um arquivo oculto e não-rastreável (`.env`), sendo injetada na aplicação apenas no momento da execução (em memória).
+
+#### 2. Governança de IA e Engenharia de Prompt (Guardrails)
+Modelos fundacionais como o GPT-4 são generalistas. Para transformá-lo em um assistente corporativo útil, foi implementado o controle de contexto através da injeção silenciosa de um **System Prompt** no estado da sessão:
+```python
+{"role": "system", "content": "Você é um assistente corporativo sênior..."}
+```
+Isso estabelece os limites operacionais do modelo, forçando-o a adotar uma *persona* técnica, concisa e formatada, evitando alucinações ou respostas fora do escopo do negócio.
+
+#### 3. Resiliência, UX e Otimização de Custos
+Aplicações que dependem de APIs de terceiros estão sujeitas a falhas de rede (*Timeouts*). 
+* **Tolerância a Falhas:** A comunicação com a OpenAI foi encapsulada em blocos `try/except`, garantindo que quedas de conexão gerem alertas amigáveis na interface, em vez de derrubar (*Crash*) a aplicação inteira.
+* **FinOps (Custos):** O modelo foi migrado estrategicamente para o `gpt-4o-mini`, reduzindo o custo computacional e financeiro em quase 90% para o projeto, mantendo a latência baixíssima e a inteligência intacta para tarefas corporativas padrão.
+
+---
+
+### 🛠️ Estrutura do Projeto
+
+```text
+📦 jornada-python-refactored
+ ┣ 📂 Aula04
+ ┃ ┣ 📜 app_chatbot.py            # Motor principal com Streamlit, OpenAI e Error Handling
+ ┃ ┣ 📜 .env.example              # Template de segurança (Mostra onde inserir a API Key localmente)
+ ┃ ┗ 🖼️ chatbot_interface.png     # Asset visual da interface renderizada
+```
+
+### 🎮 Como Executar a Aplicação de IA
+
+Este módulo requer a configuração prévia de chaves de ambiente para se comunicar com os servidores da OpenAI.
+
+1. **Instalação do Ecossistema:**
+Acesse a pasta do projeto e instale as dependências de interface, IA e segurança:
+```bash
+cd Aula04
+pip install streamlit openai python-dotenv
+```
+
+2. **Configuração do Cofre de Chaves (SecOps):**
+Crie um arquivo chamado `.env` na raiz da pasta `Aula04` e insira sua chave da OpenAI gerada no painel de desenvolvedor:
+```text
+OPENAI_API_KEY=sk-proj-sua-chave-aqui
+```
+
+3. **Inicialização do Servidor Local:**
+Inicie o motor do Streamlit. O sistema fará o *bind* automático em uma porta local (geralmente `http://localhost:8501`) e abrirá a interface no seu navegador padrão:
+```bash
+streamlit run app_chatbot.py
+```
+
+<br>
+
+---
+
+---
+
+## 🏁 Conclusão da Jornada: De Scripts a Sistemas
+
+A **Jornada Python** provou ser um excelente ecossistema para demonstrar o poder da linguagem em diferentes frentes tecnológicas. No entanto, o verdadeiro valor deste repositório reside na **camada de engenharia** aplicada sobre os projetos base.
+
+Ao longo de 4 desafios, documentamos na prática a transição essencial que diferencia um código que "apenas funciona" de um sistema preparado para o mundo corporativo:
+
+1. **RPA:** Evoluímos do uso de coordenadas físicas (*magic numbers*) para um motor orientado a objetos dinâmico e portátil.
+2. **Business Intelligence:** Saímos de gráficos dispersos para a construção de um motor analítico com projeção de cenários preditivos (*What-If Analysis*).
+3. **Machine Learning:** Eliminamos vazamentos de dados com a implementação de *Scikit-Learn Pipelines*, focando em métricas reais de negócio (*Recall* financeiro).
+4. **Inteligência Artificial:** Estruturamos a fundação de aplicações com LLMs aplicando isolamento de segurança (*.env*) e governança contextual (*System Prompts*).
+
+### 🤝 Conecte-se
+Este portfólio é um documento vivo do meu comprometimento com as melhores práticas de Arquitetura de Software e Dados. Sinta-se à vontade para explorar o código-fonte, clonar os projetos ou conectar-se comigo para discutirmos tecnologia, engenharia e arquitetura de soluções.
+
+<div align="center">
+  <br>
+  <i>"Bons programadores escrevem códigos que computadores entendem. Grandes programadores escrevem códigos que humanos entendem."</i> — <b>Martin Fowler</b>
+</div>
 
 
 
